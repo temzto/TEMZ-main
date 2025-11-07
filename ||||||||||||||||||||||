@@ -1,0 +1,237 @@
+-- ✅ Auto filename = place_PLACEID_GAMENAME.rbxlx
+local placeId = game.PlaceId or "UnknownPlace"
+local placeName = game:GetService("MarketplaceService"):GetProductInfo(placeId).Name or "UnknownGame"
+placeName = placeName:gsub("[^%w%s]", "")
+placeName = placeName:gsub("%s+", "_")
+local fileName = string.format("place_%s_%s.rbxlx", placeId, placeName)
+
+--========================================================--
+-- 🗝️ KEY SYSTEM GUI
+--========================================================--
+
+local keyRequired = "TEMZ ON TOP BABY"
+
+local KeyGui = Instance.new("ScreenGui")
+KeyGui.IgnoreGuiInset = true
+KeyGui.ResetOnSpawn = false
+KeyGui.Name = "KeySystem"
+KeyGui.Parent = game:GetService("CoreGui")
+
+local BG = Instance.new("Frame")
+BG.Size = UDim2.new(1, 0, 1, 0)
+BG.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+BG.BackgroundTransparency = 0.7
+BG.Parent = KeyGui
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 100)
+Title.Position = UDim2.new(0, 0, 0.3, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "KEY HERE"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextScaled = true
+Title.Font = Enum.Font.GothamBold
+Title.Parent = BG
+
+local TextBox = Instance.new("TextBox")
+TextBox.Size = UDim2.new(0.5, 0, 0, 50)
+TextBox.Position = UDim2.new(0.5, 0, 0.45, 0)
+TextBox.AnchorPoint = Vector2.new(0.5, 0)
+TextBox.PlaceholderText = "Enter Key..."
+TextBox.Text = ""
+TextBox.TextScaled = true
+TextBox.Font = Enum.Font.GothamBold
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TextBox.Parent = BG
+
+local ConfirmBtn = Instance.new("TextButton")
+ConfirmBtn.Size = UDim2.new(0.3, 0, 0, 45)
+ConfirmBtn.Position = UDim2.new(0.5, 0, 0.58, 0)
+ConfirmBtn.AnchorPoint = Vector2.new(0.5, 0)
+ConfirmBtn.Text = "CONFIRM"
+ConfirmBtn.TextScaled = true
+ConfirmBtn.Font = Enum.Font.GothamBold
+ConfirmBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+ConfirmBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ConfirmBtn.Parent = BG
+
+local Message = Instance.new("TextLabel")
+Message.Size = UDim2.new(1, 0, 0, 40)
+Message.Position = UDim2.new(0, 0, 0.7, 0)
+Message.BackgroundTransparency = 1
+Message.TextColor3 = Color3.fromRGB(255, 0, 0)
+Message.Text = ""
+Message.TextScaled = true
+Message.Font = Enum.Font.GothamBold
+Message.Parent = BG
+
+-- Function to handle key check
+local keyValidated = Instance.new("BoolValue")
+keyValidated.Value = false
+
+ConfirmBtn.MouseButton1Click:Connect(function()
+	if TextBox.Text == keyRequired then
+		Message.TextColor3 = Color3.fromRGB(0, 255, 0)
+		Message.Text = "KEY ACCEPTED!"
+		task.wait(0.5)
+		KeyGui:Destroy()
+		keyValidated.Value = true
+	else
+		Message.TextColor3 = Color3.fromRGB(255, 0, 0)
+		Message.Text = "WRONG KEY!"
+		task.wait(1)
+		Message.Text = ""
+	end
+end)
+
+-- Wait for valid key
+repeat task.wait() until keyValidated.Value == true
+
+--========================================================--
+-- 💾 AFTER KEY ACCEPTED – CONTINUE ORIGINAL SCRIPT
+--========================================================--
+
+-- ✅ Fullscreen Black GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Name = "SavingOverlay"
+ScreenGui.Parent = game:GetService("CoreGui")
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(1, 0, 1, 0)
+Frame.Position = UDim2.new(0, 0, 0, 0)
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BackgroundTransparency = 0
+Frame.Parent = ScreenGui
+
+-- ✅ Glitch Text Label
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Size = UDim2.new(1, 0, 0.2, 0)
+TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+TextLabel.BackgroundTransparency = 1
+TextLabel.Text = "TEMZ ON TOP BABY"
+TextLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+TextLabel.TextScaled = true
+TextLabel.Font = Enum.Font.SourceSansBold
+TextLabel.Parent = Frame
+
+-- ✅ Duplicate for Glitch Effect
+local Glitch1 = TextLabel:Clone()
+Glitch1.TextColor3 = Color3.fromRGB(255, 0, 100)
+Glitch1.Position = UDim2.new(0.5, 3, 0.5, 2)
+Glitch1.Parent = Frame
+
+local Glitch2 = TextLabel:Clone()
+Glitch2.TextColor3 = Color3.fromRGB(255, 255, 255)
+Glitch2.Position = UDim2.new(0.5, -3, 0.5, -2)
+Glitch2.Parent = Frame
+
+-- ✅ Glitch Animation
+local running = true
+task.spawn(function()
+	while running do
+		local offsetX = math.random(-6, 6)
+		local offsetY = math.random(-6, 6)
+		Glitch1.Position = UDim2.new(0.5, offsetX, 0.5, offsetY)
+		Glitch2.Position = UDim2.new(0.5, -offsetX, 0.5, -offsetY)
+		Glitch1.TextTransparency = (math.random(0, 3) * 0.1)
+		Glitch2.TextTransparency = (math.random(0, 3) * 0.1)
+		if math.random() > 0.97 then
+			TextLabel.Visible = false
+			task.wait(0.05 + math.random()/50)
+			TextLabel.Visible = true
+		end
+		task.wait(0.06 + (math.random()/80))
+	end
+end)
+
+task.wait(1)
+
+-- ✅ SaveInstance Section
+local Params = {
+	RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
+	SSI = "saveinstance",
+}
+local ok, res = pcall(function()
+	return game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true)
+end)
+
+if not ok or type(res) ~= "string" then
+	warn("[SaveInstance] Failed to download save tool.")
+	running = false
+	task.wait(0.3)
+	pcall(function() ScreenGui:Destroy() end)
+	return
+end
+
+local fn, loadErr = loadstring(res, Params.SSI)
+if not fn then
+	warn("[SaveInstance] loadstring error:", loadErr)
+	running = false
+	task.wait(0.3)
+	pcall(function() ScreenGui:Destroy() end)
+	return
+end
+
+local ranOk, synsaveinstance = pcall(fn)
+if not ranOk then
+	warn("[SaveInstance] init error:", synsaveinstance)
+	running = false
+	task.wait(0.3)
+	pcall(function() ScreenGui:Destroy() end)
+	return
+end
+
+local Options = {
+	FilePath = fileName,
+	SavePlayers = false,
+	RemovePlayerCharacters = false,
+	IgnoreDefaultProps = false,
+	Noscripts = false,
+	Decompile = true,
+	SafeMode = false,
+	IsolateLocalPlayer = true,
+	Timeout = 180,
+	ShowStatus = true,
+}
+
+local okSave, saveErr = pcall(function()
+	synsaveinstance(Options)
+end)
+
+running = false
+
+if not okSave then
+	warn("[SaveInstance] save error:", saveErr)
+	TextLabel.Text = "SAVE FAILED"
+	TextLabel.TextColor3 = Color3.fromRGB(255, 120, 120)
+	Glitch1.Visible = false
+	Glitch2.Visible = false
+	task.wait(1)
+	pcall(function() ScreenGui:Destroy() end)
+	return
+end
+
+-- ✅ Success Message
+Glitch1.Visible = false
+Glitch2.Visible = false
+TextLabel.Text = "LEAVE KA NA, NASA FOLDER NA YUNG GAME"
+TextLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+TextLabel.TextScaled = true
+
+task.wait(1.2)
+local steps = 10
+for i = 1, steps do
+	local t = i / steps
+	Frame.BackgroundTransparency = t
+	TextLabel.TextTransparency = t
+	task.wait(0.03)
+end
+pcall(function() ScreenGui:Destroy() end)
+
+print("✅ Saved as: " .. tostring(fileName))
